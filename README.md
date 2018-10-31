@@ -2,7 +2,7 @@
 
 # api.mapsterious.com
 
-[deployed version](http://api.mapsterious.com)
+[live site](http://api.mapsterious.com)
 
 This DB allows you to locate items on a google map, identify them with a lat/lng location,
 and classify the location as either a recreation site or a restaurant or a school. The location is given
@@ -10,6 +10,7 @@ and classify the location as either a recreation site or a restaurant or a schoo
 
 The admin publishes a REST API consumed by [mapsterious.com](http://mapsterious.com)
 
+example endpoint: [http://api.mapsterious.com/locations/JSON](http://api.mapsterious.com/locations/JSON)
 
 ## Local Development
 
