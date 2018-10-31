@@ -8,7 +8,7 @@ This DB allows you to locate items on a google map, identify them with a lat/lng
 and classify the location as either a recreation site or a restaurant or a school. The location is given
  an icon and linked to either a wikipedia page or a yelp page. Users, once logged in via FB oauth, can create, read, update or delete a location, as well as leave comments on any location
 
-The admin publishes a REST API consumed by [mapsterious.com](http://mapsterious.com)
+The admin publishes a REST API consumed by [mapsterious.com frontend application](https://github.com/andrewtdunn/mapsterious_fe).
 
 example endpoint: [http://api.mapsterious.com/locations/JSON](http://api.mapsterious.com/locations/JSON)
 
