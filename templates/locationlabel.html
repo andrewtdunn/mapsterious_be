@@ -1,0 +1,11 @@
+<article class="location-entry {{location.type}}-label" onclick="window.location.href='{{url_for('showLocation', location_id=location.id)}}'">
+
+  <a id="location-name-header" href="{{url_for('showLocation', location_id=location.id)}}"><h2 class="location-name">{{location.menuLabel|safe}}</h2></a>
+
+  {% if location.active == "no" %}
+  {% include '_inactive_label.html'%}
+  {% endif %}
+  {% if 'username' in session %}
+    {% include '_edit_icons.html' %}
+  {% endif %}
+</article>

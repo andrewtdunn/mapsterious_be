@@ -1,0 +1,14 @@
+{% if location.user_id == currUserId %}
+
+<div class="location-delete">
+  <a href="/location/{{location.id}}/delete" class="icon-bin"></a>
+</div>
+
+<div class="location-edit">
+  <a href="/location/{{location.id}}/edit" class="icon-pencil"></a>
+</div>
+{% endif %}
+
+<div class="location-reviews">
+  <!--<span class="numReviews">{{location.numReviews}}</span>--><a href="/location/{{location.id}}/review/new" class="icon-heart"></a>
+</div>

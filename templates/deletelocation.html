@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+  {% block main %}
+  <div class="row location-form-container">
+    <a href="{{ url_for('showLocations') }}" class="icon-cancel-circle"></a>
+    <form action="{{ url_for('deleteLocation', location_id = location.id)}}" method="post">
+      <div class="form-group">
+          <label>Are you sure you want to delete {{location.label}}?</label>
+      </div>
+
+      <button type="submit" class="btn btn-info">Delete Location</button>
+    </form>
+
+  </div>
+
+
+  {% endblock %}>

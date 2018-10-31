@@ -1,0 +1,215 @@
+
+{% if not newLoc %}
+<div  id="view-link">
+  <a href="{{url_for('showLocation', location_id=location.id)}}">
+      <span class="icon-eye"></span></a>
+</div>
+{% endif %}
+<form class="form location-form" enctype="multipart/form-data" autocomplete="off"
+
+  {% if newLoc %}
+    action="{{ url_for('newLocation') }}"
+  {% else %}
+    action="{{url_for('editLocation', location_id=location.id)}}"
+  {% endif %}
+  method='post'>
+
+  <fieldset>
+    {% if not newLoc %}
+      <legend><span id="edit-legend">Editing:</span> {{location.menuLabel|safe}}</legend>
+    {% else %}
+      <legend><span id="new-loc-legend">New Location</span></legend>
+    {% endif %}
+    <hr class="form-hr"/>
+    <div id="form-toggle-holder">
+      <label id="form-switch-active" class="switch">
+        <input name="activeToggle" type="checkbox" onchange="handleChange(this);"
+        {% if location.active == 'yes' %} checked{% endif %}>
+        <div class="slider round"></div>
+      </label>
+    </div>
+    <div id="toggle-label" {% if location.active == 'yes' %}class="active"{% endif %}>
+      {% if location.active == 'yes' %}Active{% else %}Inactive{% endif %}</div>
+    <div class="clear"></div>
+    <hr class="form-hr"/>
+
+    <div class="form-check">
+      <label class="form-check-label">
+        <input name="locationType" type="radio" class="form-check-input"
+          value="food"
+          {% if location.type == 'food' %}checked{% endif %}
+        >
+        Restaurant
+      </label>
+    </div>
+
+    <div class="form-check">
+      <label class="form-check-label">
+        <input name="locationType" type="radio" class="form-check-input"
+          value="school"
+          {% if location.type == 'school' %}checked{% endif %}
+        >
+        School
+      </label>
+    </div>
+
+    <div class="form-check">
+      <label class="form-check-label">
+        <input name="locationType" type="radio" class="form-check-input"
+          value="rec"
+          {% if location.type == 'rec' %}checked{% endif %}
+        >
+        Recreation
+      </label>
+    </div>
+
+  </fieldset>
+  <hr class="form-hr"/>
+
+  <div class="form-group">
+    <label for="menuLabel">Menu Label:</label>
+    <input class="form-control" type="text" name="menuLabel" value="{{location.menuLabel|safe}}" id="menuLabel">
+  </div>
+
+  <div class="form-group">
+      <label for="fullLabel">Full Label:</label>
+      <input class="form-control" type="text" name="fullLabel" id="fullLabel" value="{{location.label|safe}}">
+  </div>
+
+  <div class="form-group">
+    <label for="wiki_id" class="">Wikipedia Page ID:</label>
+    <input id="wiki_input" class="form-control"
+            type="text" id="wiki_id" name="wiki_id"
+            value="{{location.wiki_id}}" {% if (location.type=="food") %}
+              disabled
+            {% endif %}>
+    <small id="fileHelp" class="form-text text-muted">To find page id - on wiki page go to Tools > Page Information on the left menu.</small>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label col-xs-2">Yelp Business ID:</label>
+    <input id="yelp_input" class="form-control" list="yelp_options"
+           type="text" size="30" name="yelp_id"
+           value="{{location.yelp_id}}" {% if (location.type=="rec" or location.type=="school") %}
+             disabled
+           {% endif %}>
+     <label for="city" class="control-label col-xs-2">City:</label>
+     <input id="city" class="form-control"
+            type="text" size="30" name="city">
+ 	  <label for="state" class="control-label col-xs-2">State:</label>
+ 		<select class="form-control" id="state" name="state">
+ 			<option value="">N/A</option>
+ 			<option value="Alaska">Alaska</option>
+ 			<option value="Alabama">Alabama</option>
+ 			<option value="Arkansas">Arkansas</option>
+ 			<option value="Arizona">Arizona</option>
+ 			<option value="California">California</option>
+ 			<option value="Colorado">Colorado</option>
+ 			<option value="Connecticut">Connecticut</option>
+ 			<option value="DC">District of Columbia</option>
+ 			<option value="Delaware">Delaware</option>
+ 			<option value="Florida">Florida</option>
+ 			<option value="Georgia">Georgia</option>
+ 			<option value="Hawaii">Hawaii</option>
+ 			<option value="Iowa">Iowa</option>
+ 			<option value="Idaho">Idaho</option>
+ 			<option value="Illinois">Illinois</option>
+ 			<option value="Indiana">Indiana</option>
+ 			<option value="Kansas">Kansas</option>
+ 			<option value="Kentucky">Kentucky</option>
+ 			<option value="Louisiana">Louisiana</option>
+ 			<option value="Massachusetts">Massachusetts</option>
+ 			<option value="Maryland">Maryland</option>
+ 			<option value="Maine">Maine</option>
+ 			<option value="Michigan">Michigan</option>
+ 			<option value="Minnesota">Minnesota</option>
+ 			<option value="Missouri">Missouri</option>
+ 			<option value="Mississippi">Mississippi</option>
+ 			<option value="Montana">Montana</option>
+ 			<option value="NC">North Carolina</option>
+ 			<option value="ND">North Dakota</option>
+ 			<option value="Nebraska">Nebraska</option>
+ 			<option value="NH">New Hampshire</option>
+ 			<option value="NJ">New Jersey</option>
+ 			<option value="New Mexico">New Mexico</option>
+ 			<option value="Nevada">Nevada</option>
+ 			<option value="New York">New York</option>
+ 			<option value="Ohio">Ohio</option>
+ 			<option value="Oklahoma">Oklahoma</option>
+ 			<option value="Oregon">Oregon</option>
+ 			<option value="Pennsylvania">Pennsylvania</option>
+ 			<option value="PR">Puerto Rico</option>
+ 			<option value="RI">Rhode Island</option>
+ 			<option value="Rhode Island">South Carolina</option>
+ 			<option value="South Dakota">South Dakota</option>
+ 			<option value="Tennessee">Tennessee</option>
+ 			<option value="Texas">Texas</option>
+ 			<option value="Utah">Utah</option>
+ 			<option value="Virginia">Virginia</option>
+ 			<option value="Vermont">Vermont</option>
+ 			<option value="Washington">Washington</option>
+ 			<option value="Wisconsin">Wisconsin</option>
+ 			<option value="West Virginia">West Virginia</option>
+ 			<option value="Wyoming">Wyoming</option>
+ 		</select>
+
+    <label for="yelp_options" class="control-label col-xs-2">Suggestions:</label>
+    <select id="yelp_options" class="form-control">
+      <option disabled>Options</option>
+    </select>
+  </div>
+
+  <img src={{ "https://s3-us-west-2.amazonaws.com/andrewdunn-pictures/thumbs/images/"+ location.icon if (location.icon and not newLoc) else
+            "http://placehold.it/80x100" }} />
+
+  </br>
+  </br>
+  <div class="form-group">
+    <label for="inputFile">Map Icon</label>
+    <input type="file" name="file" class="form-control-file" id="inputFile" aria-describedby="fileHelp">
+  </div>
+
+  <input id="mapLat" type="hidden" size="30" name="lat" value="{{location.lat}}">
+
+  <input id="mapLng" type="hidden" size="30" name="lng" value="{{location.lng}}">
+
+  <button type="submit" class="btn btn-info">Save Location</button>
+
+</form>
+</br>
+</br>
+<script>
+
+  function handleChange(checkbox){
+    var checked = checkbox.checked;
+    var labelText = document.getElementById("toggle-label");
+    if (checked){
+      labelText.innerHTML = "Active";
+      labelText.className = "active";
+    } else {
+      labelText.innerHTML = "Inactive";
+      labelText.className = "";
+    }
+  }
+
+  $.fn.extend({
+    disable: function(state){
+      return this.each(function(){
+        this.disabledState = state;
+      })
+    }
+  })
+
+  $("input[type=radio]").on("click",function(e){
+    var locType = $(e.target).val();
+    console.log(locType)
+    if (locType === "food"){
+      $("#wiki_input").prop("disabled", true);
+      $("#yelp_input").prop("disabled", false);
+    } else {
+      $("#wiki_input").prop("disabled", false);
+      $("#yelp_input").prop("disabled", true);
+    }
+  });
+
+</script>

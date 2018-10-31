@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block main %}
+  <h1 class="header locations-header">{{locationHeader}}</h1>
+  {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div id="flash-messages">
+            <ul>
+            {% for message in messages %}
+
+                <li>{{message}}</li>
+
+            {% endfor %}
+            </ul>
+            </div>
+        {% endif %}
+  {% endwith%}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-4">
+        {% for location in locations %}
+          {% set colnum = loop.index%3 %}
+            {% if colnum == 1 %}
+             {% include 'locationlabel.html' %}
+            {% endif %}
+        {% endfor %}
+      </div>
+      <div class="col-sm-4">
+        {% for location in locations %}
+          {% set colnum = loop.index%3 %}
+            {% if colnum == 2 %}
+              {% include 'locationlabel.html' %}
+            {% endif %}
+        {% endfor %}
+      </div>
+      <div class="col-sm-4">
+        {% for location in locations %}
+          {% set colnum = loop.index%3 %}
+            {% if colnum == 0 %}
+              {% include 'locationlabel.html' %}
+            {% endif %}
+        {% endfor %}
+      </div>
+  </div>
+
+</div>
+{% endblock %}

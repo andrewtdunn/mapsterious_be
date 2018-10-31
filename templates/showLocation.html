@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+  {% block main %}
+  <div class="row location-form-container">
+    <a href="{{ url_for('showLocations')}}" class="icon-cancel-circle"></a>
+    <div class="col-md-4" id="info-holder">
+      <p>
+        <span id="show-legend">{{location.label|safe}}</span>
+        <p>Located by: {{location.locator.name}}</p>
+        {% if location.active == "no" %}
+          {% include '_inactive_label.html' %}
+        {% endif %}
+      </p>
+      {% if location.type == "food" %}
+        {% include '_yelp.html' %}
+      {% elif location.type == "rec" or location.type == "school"%}
+        {% include '_wiki.html' %}
+      {% endif %}
+    </div>
+    <div class="col-md-8">
+      <div id="map"></div>
+    </div>
+  </div>
+
+  <script>
+    var map;
+
+    var locLatLng = {lat:{{location.lat}}, lng: {{location.lng}} };
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: locLatLng,
+        zoom: 19,
+		    mapTypeId: 'hybrid',
+		    mapTypeControlOptions: {
+			       mapTypeIds: [google.maps.MapTypeId.ROADMAP,
+				            google.maps.MapTypeId.HYBRID]
+		    }
+      });
+
+      var marker = new google.maps.Marker({
+        position: locLatLng,
+        map: map
+        {% if (location.icon and location.icon != None) %}, icon: "https://s3-us-west-2.amazonaws.com/andrewdunn-pictures/thumbs/images/{{location.icon}}"{% endif %}
+      });
+
+      google.maps.event.addListener(marker, "dragend", function(event) {
+        var lat = event.latLng.lat();
+        var lng = event.latLng.lng();
+        document.getElementById("mapLat").value = lat;
+        document.getElementById("mapLng").value = lng;
+      });
+    }
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZVRdsKOj4_nnBJkmX5bdkv2spRgJtV-8&callback=initMap"
+    async defer></script>
+    {% endblock %}>

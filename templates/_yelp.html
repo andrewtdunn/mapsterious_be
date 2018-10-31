@@ -1,0 +1,52 @@
+{% if 'username' in session %}
+<div id="upper-edit-icons-holder">
+  {% include '_edit_icons.html' %}
+</div>
+{% endif %}
+{% if 'error' in location.meta_info %}
+  <p class="not-found">{{location.meta_info.error.description}}</p>
+{% else %}
+  <div id="ratings-icons">
+    <div id="rating-stars">
+      {% for star in range(location.meta_info.stars) %}
+        <span class="icon-star-full"></span>
+      {% endfor %}
+      {% if location.meta_info.half_star == 1 %}
+        <span class="icon-star-half"></span>
+      {% endif %}
+      {% for star in range(5-location.meta_info.half_star-location.meta_info.stars) %}
+        <span class="icon-star-empty"></span>
+      {% endfor %}
+    </div>
+    <div id="rating-price">
+      {% for star in range(location.meta_info.cost) %}
+        <span class="icon-coin-dollar"></span>
+      {% endfor %}
+      {% for star in range(5 - location.meta_info.cost) %}
+        <span class="icon-coin-dollar-off"></span>
+      {% endfor %}
+    </div>
+  </div>
+  <div id="review-main">
+    <div id="yelp-images">
+      {% for image in location.meta_info.image_url %}
+        <img class="yelp-thumb" src="{{image}}"></img>
+      {% endfor %}
+    </div>
+    <div id="review-holder">
+      <div id="yelp-review">
+        <p id="review">{{location.meta_info.reviews.review}}</p>
+        <p id="reviewer">- {{location.meta_info.reviews.reviewer}}</p>
+      </div>
+      <p id="numReviews">Total Reviews: <a id='reviewNum' href='{{location.meta_info.url}}' target='blank'>{{location.meta_info.reviews.total_reviews}}</a></p>
+      <p id="phoneNumber"><span class="icon-phone"></span>{{location.meta_info.display_phone}}</p>
+      <div id="address">
+        <ul id="address-list">
+          {% for line in location.meta_info.display_address %}
+            <li>{{line}}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endif %}

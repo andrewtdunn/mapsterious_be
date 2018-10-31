@@ -1,0 +1,23 @@
+{% if 'username' in session %}
+  <div id="upper-edit-icons-holder">
+    {% include '_edit_icons.html' %}
+  </div>
+{% endif %}
+<p>
+  <span id="show-legend">{{location.label|safe}}</span>
+  {% if location.active == "no" %}
+    {% include '_inactive_label.html' %}
+  {% endif %}
+</p>
+<form class="form review-form" enctype="multipart/form-data" action="{% if editReview==True %}{{url_for('editReview', location_id=location.id,review_id=review.id)}}{% else %}{{url_for('newReview', location_id=location.id)}}{% endif %}" method="post">
+  <div class="form-group">
+    <textarea class="form-control" rows="5" name="review">{% if editReview %}{{review.review_text}}{% endif %}</textarea>
+  </div>
+  <button type="submit" class="btn btn-info">Save</button>
+</form>
+
+<div id="review-list">
+  {% for review in reviews%}
+    {% include '_review.html' %}
+  {% endfor %}
+</div>

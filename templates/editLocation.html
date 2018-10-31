@@ -1,0 +1,127 @@
+{% extends "layout.html" %}
+  {% block main %}
+  <div class="row location-form-container">
+    <a href="{{ url_for('showLocations')}}" class="icon-cancel-circle"></a>
+    <div id="form-left" class="col-md-4">
+      {% if newReview==True %}
+        {% include 'reviewForm.html' %}
+      {% else %}
+        {% include 'editform.html' %}
+      {% endif %}
+
+    </div>
+    <div class="col-md-8">
+      <div id="map"></div>
+    </div>
+  </div>
+
+  <script>
+    var map;
+    var locLatLng = {lat:{{location.lat}}, lng: {{location.lng}}};
+    var marker;
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: locLatLng,
+        zoom: {{ 16 if newLoc == True else 20}},
+		    mapTypeId: 'hybrid',
+		    mapTypeControlOptions: {
+			       mapTypeIds: [google.maps.MapTypeId.ROADMAP,
+				            google.maps.MapTypeId.HYBRID]
+		    }
+      });
+
+      marker = new google.maps.Marker({
+        position: locLatLng,
+        map: map,
+        draggable:true
+      });
+
+      google.maps.event.addListener(marker, "dragend", function(event) {
+        var lat = event.latLng.lat();
+        var lng = event.latLng.lng();
+        document.getElementById("mapLat").value = lat;
+        document.getElementById("mapLng").value = lng;
+      });
+    }
+
+    function setOptions(options) {
+      // console.log("options", options);
+      $('#yelp_options').append('<option value="">Choose Location</option>');
+      for (var i=0; i < options.length; i++) {
+        $('#yelp_options').append('<option value="' + i + '">' + options[i].name + ' - ' + options[i].location.address1 + ' - ' + options[i].location.city + '</option>');
+      }
+    }
+
+    $('#yelp_options').on('change', function() {
+      console.log( yelpOptions[this.value].name );
+      var latValue = yelpOptions[this.value].coordinates.latitude;
+      var longValue = yelpOptions[this.value].coordinates.longitude;
+      let centerObj = {lat:latValue, lng:longValue};
+      // console.log(centerObj);
+      map.setCenter(centerObj);
+      // console.log(map.center);
+      marker.setPosition(centerObj)
+      map.setZoom(20);
+      $('#yelp_input').val(yelpOptions[this.value].alias);
+      $('#menuLabel').val(yelpOptions[this.value].name);
+      $('#fullLabel').val(yelpOptions[this.value].name);
+      document.getElementById("mapLat").value = centerObj.lat;
+      document.getElementById("mapLng").value = centerObj.lng;
+
+    });
+
+    document.addEventListener('DOMContentLoaded',function() {
+      document.querySelector('input[name="yelp_id"]').addEventListener("keyup", changeEventHandler);
+    },false);
+
+    function formatLocationParam(){
+      let state = $("#state").val().trim();
+      let city = $("#city").val().trim();
+      if (city.length > 0 && state.length > 0) {
+        return city + ", " + state;
+      } else if (city.length > 0) {
+        return city;
+      } else {
+        return state;
+      }
+    }
+
+    var fetching = false;
+    var yelpOptions = [];
+    var waitInterval;
+    function changeEventHandler(event) {
+      // You can use “this” to refer to the selected element.
+      // console.log('Searching yelp for ' + event.target.value + '.');
+      // console.log("clearing timeout");
+      if (fetching || event.target.value.length == 0) {
+        return;
+      } else {
+        window.clearTimeout(waitInterval);
+        waitInterval = window.setTimeout( function (){
+          // console.log("setting timeout");
+          // console.log("calling ajax");
+          fetching = true
+          if (event.target.value.length == 0) { return; }
+          $('#yelp_options').empty();
+          $.ajax({
+            type: "GET",
+            url: encodeURI("/yelp_search/"+ event.target.value + "/" + formatLocationParam() + "/JSON")
+          }).done(function( o ) {
+            fetching = false
+             // do something
+             // console.log("names set");
+             yelpOptions = o.businesses;
+             // console.log(o.businesses);
+             setOptions(yelpOptions);
+          });
+        }, 500);
+
+      }
+
+    }
+
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZVRdsKOj4_nnBJkmX5bdkv2spRgJtV-8&callback=initMap"
+  async defer></script>
+  {% endblock %}>

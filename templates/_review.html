@@ -1,0 +1,17 @@
+<div class="review">
+  <img class="review-pic" src="{{ review.reviewer.picture }}" />
+  <div class="review-text">
+    <div><b>{{review.reviewer.name}}</b></div>
+    {{review.review_text}}
+    {% if currUserId == review.user_id %}
+      <div class="review-delete">
+        <a href="/location/{{location.id}}/review/{{review.id}}/delete" class="icon-bin"></a>
+      </div>
+
+      <div class="review-edit">
+        <a href="/location/{{location.id}}/review/{{review.id}}/edit" class="icon-pencil"></a>
+      </div>
+    {% endif %}
+  </div>
+  <div class="clear"></div>
+</div>

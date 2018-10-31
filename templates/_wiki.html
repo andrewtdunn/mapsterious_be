@@ -1,0 +1,97 @@
+{% if 'username' in session %}
+  <div id="upper-edit-icons-holder">
+    {% include '_edit_icons.html' %}
+  </div>
+{% endif %}
+<div id="wiki-info">
+  <img id="wiki-thumb"></img>
+  <p id="wiki-text"></p>
+</div>
+
+
+
+
+<script>
+/** used to generate oAuth token */
+	function nonce_generate(){
+		return (Math.floor(Math.random() * 1e12).toString());
+	};
+
+	/** used to generate oAuth token */
+	function native2ascii(str) {
+		var out = '';
+		for (var i = 0; i < str.length; i++) {
+			if (str.charCodeAt(i) < 0x80) {
+				out += str.charAt(i);
+			} else {
+				var u = '' + str.charCodeAt(i).toString(16);
+				out += '\\u' + (u.length === 2 ? '00' + u : u.length === 3 ? '0' + u : u);
+			}
+		}
+		return out;
+	};
+
+	/** counts words in string */
+	function countWords(str) {
+		return str.split(/\s+/).length;
+	};
+
+	/** queries wikipedia url */
+	function getWikipediaInfo(){
+		//console.log(clickedLoc.label());
+		var location = "{{location.label}}";
+    location = encodeURI(location);
+		var pageID = "{{location.wiki_id}}"
+		var wikiUrl = 'https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&pageids='+ pageID +'&callback=?';
+
+    var EXTRACT_WORDS_LENGTH = 50;
+    console.log("wikiUrl: " + wikiUrl);
+		$.ajax({
+			url: wikiUrl,
+			dataType: 'jsonp'
+
+		}).done( function(data){
+			var pages = data.query.pages;
+      console.log(pages)
+			var extract = pages[pageID].extract;
+
+			if (countWords(extract) > EXTRACT_WORDS_LENGTH){
+				extract= extract.replace(/\s+/g,' ').split(/(?=\s)/gi).slice(0, EXTRACT_WORDS_LENGTH).join('') + ' ...';
+			}
+
+      $('#wiki-text').html(extract+' <span><a href="https://en.wikipedia.org/?curid=' + pageID + '" target="blank">more</a></span>');
+			console.log('https://en.wikipedia.org/?curid=' + pageID);
+
+
+		}).fail(function(){
+			console.log('wikipedia');
+
+		});
+    //var wikiImagesUrl = 'https://en.wikipedia.org/w/api.php?format=json&action=query&prop=images&exintro=&explaintext=&pageids='+ pageID +'&callback=?';
+		var wikiImagesUrl  = 'http://en.wikipedia.org/w/api.php?action=query&pageids='+ pageID +'&prop=pageimages&format=json&pithumbsize=100&callback=?';
+    console.log("image url " + wikiImagesUrl);
+		$.ajax({
+			// ajax settings
+			url: wikiImagesUrl,
+			dataType: 'jsonp'
+		}).done( function(data){
+			var pages = data.query.pages;
+      console.log(data)
+			for (var page in pages){
+				var src =  pages[page].thumbnail.source;
+        $("#wiki-thumb").attr("src", src);
+			}
+
+		}).fail(function(){
+			console.log('wikipedia image');
+		});
+
+	};
+
+  $(document).ready(function() {
+    {% if location.wiki_id != None %}
+      getWikipediaInfo();
+    {% endif %}
+  });
+
+</script>
