@@ -1,4 +1,4 @@
-![alt text](https://github.com/andrewtdunn/map_db_vm/blob/master/map.png "screenshot")
+![alt text](https://github.com/andrewtdunn/mapsterious_be/blob/master/api1.png?raw=true "screenshot")
 
 # api.mapsterious.com
 
@@ -32,3 +32,5 @@ $ python application.py
 map should load at localhost:5000
 
 from there, performing CRUD operations on locations should be intuitive, using the emojis
+
+![alt text](https://github.com/andrewtdunn/mapsterious_be/blob/master/api2.png?raw=true "screenshot")
