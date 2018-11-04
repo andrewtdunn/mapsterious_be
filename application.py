@@ -181,6 +181,7 @@ def locationsJSON():
 # JSON API to view Yelp info
 @application.route('/yelp/<string:label>/JSON')
 def yelpJSON(label):
+    label = label.encode('utf-8')
     yelp_api = YelpAPI(application.config['YELP_API_KEY'])
     result = yelp_api.business_query(label)
     reviews = yelp_api.reviews_query(label)
@@ -200,7 +201,7 @@ def yelpSearch(term, location):
     response.headers.add('Access-Control-Allow-Origin',
                          application.config['ALLOWED_DOMAIN'])
     return response
-    
+
 
 # get locations by type (rec, school, food)
 @application.route('/locations/<string:location_type>/JSON')
@@ -363,7 +364,11 @@ def get_yelp_info(yelp_id):
         return map_yelp_data(r.json())
 
 def get_yelp_reviews(yelp_id):
+    # yelp_id = yelp_id.decode("utf-8")
+    print(yelp_id.encode('utf-8'))
+    e3ylp_id = yelp_id.encode("utf-8")
     auth_headers = { 'Authorization': 'Bearer %s' % application.config['YELP_API_KEY']}
+    print("yelp id: %s" % yelp_id)
     r = requests.get('https://api.yelp.com/v3/businesses/%s/reviews' % yelp_id, headers=auth_headers)
     return map_yelp_review_data(r.json())
 
