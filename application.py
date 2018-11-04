@@ -364,11 +364,8 @@ def get_yelp_info(yelp_id):
         return map_yelp_data(r.json())
 
 def get_yelp_reviews(yelp_id):
-    # yelp_id = yelp_id.decode("utf-8")
-    print(yelp_id.encode('utf-8'))
-    e3ylp_id = yelp_id.encode("utf-8")
+    yelp_id = yelp_id.encode("utf-8")
     auth_headers = { 'Authorization': 'Bearer %s' % application.config['YELP_API_KEY']}
-    print("yelp id: %s" % yelp_id)
     r = requests.get('https://api.yelp.com/v3/businesses/%s/reviews' % yelp_id, headers=auth_headers)
     return map_yelp_review_data(r.json())
 
