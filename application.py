@@ -565,7 +565,7 @@ def addFormDataToLocation(data, imageData, location):
                       Body=file,
                       ACL='public-read',
                       Metadata={
-                        "name": data['menuLabel'].encode('utf-8'),
+                        "name": filename,
                         "width": "100",
                         "height": "100"
                       })
