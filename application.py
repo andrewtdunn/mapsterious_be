@@ -19,6 +19,7 @@ import boto3
 import re
 import requests
 import json
+from flask_sslify import SSLify
 from yelpapi import YelpAPI
 
 application = Flask(__name__)
