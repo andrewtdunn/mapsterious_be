@@ -662,4 +662,4 @@ def getUserInfo(user_id):
 if __name__ == '__main__':
     application.secret_key = 'super_secret_key'
     # application.debug = True
-    application.run(ssl_context='adhoc')
+    application.run()
