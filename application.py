@@ -23,7 +23,8 @@ from flask_sslify import SSLify
 from yelpapi import YelpAPI
 
 application = Flask(__name__)
-sslify = SSLify(application)
+if os.environ['ENVIRONMENT'] != 'development':
+    sslify = SSLify(application)
 
 application.config['UPLOAD_FOLDER'] = '/static/img/'
 application.config['ALLOWED_EXTENSIONS'] = set(['txt',
