@@ -22,6 +22,7 @@ import json
 from yelpapi import YelpAPI
 
 application = Flask(__name__)
+sslify = SSLify(application)
 
 application.config['UPLOAD_FOLDER'] = '/static/img/'
 application.config['ALLOWED_EXTENSIONS'] = set(['txt',
@@ -659,4 +660,4 @@ def getUserInfo(user_id):
 if __name__ == '__main__':
     application.secret_key = 'super_secret_key'
     # application.debug = True
-    application.run()
+    application.run(ssl_context='adhoc')
